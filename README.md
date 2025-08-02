@@ -8,7 +8,7 @@ This project is built using **Flask** (Python web framework) and **SQLite** for 
 
 ## 🌐 Live Demo
 
-Once deployed, your app will be accessible at:
+The app is accessible at:
 
 https://decidemieux.onrender.com
 
@@ -72,8 +72,8 @@ To configure authorized creators, modify this dictionary in `routes.py`:
 
 ```python
 CREATOR_CREDENTIALS = {
-    "jean": "secure123",
-    "alice": "mypassword"
+    "jean": "mypwd",
+    "alice": "loginsecure"
 }
 ```
 
