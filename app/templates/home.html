@@ -8,6 +8,7 @@
 <body class="bg-light">
 <div class="container py-5" align="center">
     <h1 class="mb-4">🤝 Decide-Mieux</h1>
+    <p><a href="https://decide-mieux.github.io/infos" class="link-info link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">Curious about this initiative?</a></p>
 
     {% if session.creator_id %}
         <a href="{{ url_for('create', name='new', creator_id=session.creator_id) }}" class="btn btn-primary mb-3">Create a Collective Decision</a>
