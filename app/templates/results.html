@@ -11,12 +11,16 @@
     <h2>Results: {{ decision.name }}</h2>
     <p class="text-muted">The choice with the highest <strong>mean score</strong> wins.</p>
     {% if stats %}
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Choice</th><th>Description</th><th>Mean</th><th>Median</th><th># Evaluations</th>
-                </tr>
-            </thead>
+       <table id="results-table" class="table table-bordered">
+<thead>
+    <tr>
+        <th>Choice</th>
+        <th>Description</th>
+        <th><button class="btn" onclick="sortTable(2)">Mean ⬍</button></th>
+        <th><button class="btn" onclick="sortTable(3)">Median ⬍</button></th>
+        <th><button class="btn" onclick="sortTable(4)"># Evaluations ⬍</button></th>
+    </tr>
+</thead>
             <tbody>
                 {% for row in stats %}
                     <tr {% if winner and row.label == winner.label %} class="table-success" {% endif %}>
@@ -40,5 +44,33 @@
     {% endif %}
     <a href="/" class="btn btn-outline-secondary">Home</a>
 </div>
+<script>
+function sortTable(colIndex) {
+    const table = document.getElementById("results-table");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    const isAsc = table.getAttribute("data-sort-col") == colIndex && table.getAttribute("data-sort-dir") == "asc";
+    table.setAttribute("data-sort-col", colIndex);
+    table.setAttribute("data-sort-dir", isAsc ? "desc" : "asc");
+
+    rows.sort((a, b) => {
+        let valA = a.children[colIndex].textContent.trim();
+        let valB = b.children[colIndex].textContent.trim();
+
+        // Convert to number if possible
+        valA = parseFloat(valA);
+        valB = parseFloat(valB);
+
+        if (isNaN(valA) || isNaN(valB)) return 0;
+
+        return isAsc ? valA - valB : valB - valA;
+    });
+
+    // Re-append sorted rows
+    rows.forEach(row => tbody.appendChild(row));
+}
+</script>
+
 </body>
 </html>
