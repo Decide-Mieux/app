@@ -8,7 +8,13 @@
 </head>
 <body class="bg-light">
 <div class="container py-5">
-    <h2>Your collective decision poll "{{ decision.name }}" Is Ready ✅</h2>
+    <h2>"{{ decision.name }}"</h2>
+    <p>Your collective decision poll is Ready ✅</p>
+    <p>Share the following code:</p>
+    <div class="alert alert-primary">
+        <strong>Poll Id:</strong><br>
+        {{ decision.id }}
+    </div>
     <p>Share the following links:</p>
 
     <div class="alert alert-primary">
