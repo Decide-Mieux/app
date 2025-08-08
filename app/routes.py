@@ -104,8 +104,7 @@ def results(decision_id):
                 "median": median(scores),
                 "count": len(scores)
             })
-
-    winner = max(stats, key=lambda x: x['mean']) if stats else None
+    winner = max(stats, key=lambda x: (x['median'], x['mean'])) if stats else None
     return render_template("results.html", decision=decision, stats=stats, winner=winner)
 #
 # @app.route("/list")
