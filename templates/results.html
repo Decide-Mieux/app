@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <h2>Results: {{ decision.name }}</h2>
+    <p class="text-muted">The choice with the highest <strong>median score</strong> wins (ties are broken according to the mean).</p>
+    {% if stats %}
+       <table id="results-table" class="table table-bordered">
+<thead>
+    <tr>
+        <th>Choice</th>
+        <th>Description</th>
+        <th><button class="btn" onclick="sortTable(2)">Mean ⬍</button></th>
+        <th><button class="btn" onclick="sortTable(3)">Median ⬍</button></th>
+        <th><button class="btn" onclick="sortTable(4)"># Evaluations ⬍</button></th>
+    </tr>
+</thead>
+            <tbody>
+                {% for row in stats %}
+                    <tr {% if winner and row.label == winner.label %} class="table-success" {% endif %}>
+                        <td>{{ row.label }}</td>
+                        <td>{{ row.description }}</td>
+                        <td>{{ row.mean }}</td>
+                        <td>{{ row.median }}</td>
+                        <td>{{ row.count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if winner %}
+            <div class="alert alert-info">
+                🏆 Winner: <strong>{{ winner.label }}</strong><br>
+                <small class="text-muted">{{ winner.description }}</small>
+            </div>
+        {% endif %}
+    {% else %}
+        <p>No evaluations yet.</p>
+    {% endif %}
+    <a href="/" class="btn btn-outline-secondary">Home</a>
+</div>
+<script>
+function sortTable(colIndex) {
+    const table = document.getElementById("results-table");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    const isAsc = table.getAttribute("data-sort-col") == colIndex && table.getAttribute("data-sort-dir") == "asc";
+    table.setAttribute("data-sort-col", colIndex);
+    table.setAttribute("data-sort-dir", isAsc ? "desc" : "asc");
+
+    rows.sort((a, b) => {
+        let valA = a.children[colIndex].textContent.trim();
+        let valB = b.children[colIndex].textContent.trim();
+
+        // Convert to number if possible
+        valA = parseFloat(valA);
+        valB = parseFloat(valB);
+
+        if (isNaN(valA) || isNaN(valB)) return 0;
+
+        return isAsc ? valA - valB : valB - valA;
+    });
+
+    // Re-append sorted rows
+    rows.forEach(row => tbody.appendChild(row));
+}
+</script>
+
+</body>
+</html>

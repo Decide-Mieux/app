@@ -1,0 +1,38 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Decide-Mieux</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/litera/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body class="bg-light">
+<div class="container py-5" align="center">
+    <h1 class="fs-1 fw-bold mb-4">🤝 Decide-Mieux</h1>
+<div class="p-4 mb-3 bg-white rounded shadow-sm">
+    <p><a href="https://decide-mieux.github.io/infos" class="link-info link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">Curious about this initiative?</a></p>
+
+    {% if session.creator_id %}
+        <a href="{{ url_for('create', name='new', creator_id=session.creator_id) }}" class="btn btn-primary mb-3">Create a Collective Decision</a>
+        <a href="{{ url_for('creator_dashboard', creator_id=session.creator_id) }}" class="btn btn-success mb-3">Your list of Collective Decisions</a>
+        <a href="{{ url_for('creator_logout') }}" class="btn btn-outline-danger mb-3 ms-2">Creator Logout</a>
+    {% else %}
+        <a href="{{ url_for('creator_login') }}" class="btn btn-outline-primary mb-3">Creator Login</a>
+    {% endif %}
+
+    <form action="/lookup" method="post" class="mb-3 mt-3">
+        <div class="input-group">
+            <input type="text" name="decision_id" class="form-control" placeholder="Enter Poll ID">
+            <button class="btn btn-outline-success" type="submit">Go</button>
+        </div>
+    </form>
+    </div>
+</div>
+<footer class="text-center text-muted py-3">
+    <small>&copy; 2025 Decide-Mieux. Made with 🤝</small>
+</footer>
+</body>
+</html>
