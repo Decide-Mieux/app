@@ -9,10 +9,11 @@
 <body class="bg-light">
 <div class="container py-5">
     <h2>Name Your Collective Decision</h2>
+    <p>You are connected as <strong>{{creator_id}}</strong> </p>
     <form action="/create" method="post">
         <div class="mb-3">
             <input type="text" name="name" class="form-control mb-3" placeholder="e.g. What to eat for dinner?" required>
-            <input type="text" name="creator_id" class="form-control mb-3" placeholder="Your Name (to retrieve your polls later)" required>
+           <!-- <input type="text" name="creator_id" class="form-control mb-3" placeholder="Your Name (to retrieve your polls later)" required>-->
         </div>
         <button type="submit" class="btn btn-success">Continue</button>
     </form>

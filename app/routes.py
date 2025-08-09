@@ -22,9 +22,9 @@ def home():
 def create():
     if request.method == "POST":
         name = request.form["name"]
-        creator_id = request.form["creator_id"]
-        return redirect(url_for("add_choices", name=name, creator_id=creator_id))
-    return render_template("create.html")
+        #creator_id = request.form["creator_id"]
+        return redirect(url_for("add_choices", name=name, creator_id=session["creator_id"]))
+    return render_template("create.html", creator_id=session["creator_id"])
 
 
 @app.route("/add_choices", methods=["GET", "POST"])
