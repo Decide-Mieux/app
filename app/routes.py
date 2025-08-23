@@ -145,4 +145,17 @@ def creator_logout():
 @app.route("/creator/<creator_id>")
 def creator_dashboard(creator_id):
     decisions = DecisionInstance.query.filter_by(creator_id=creator_id).all()
+
     return render_template("creator_dashboard.html", decisions=decisions)
+
+
+@app.route("/delete/<decision_id>", methods=["POST"])
+def delete_decision(decision_id):
+    decision = DecisionInstance.query.get(decision_id)
+    if decision:
+        db.session.delete(decision)
+        db.session.commit()
+        flash("Decision deleted successfully.", "success")
+    else:
+        flash("Decision not found.", "danger")
+    return redirect(request.referrer or url_for("home"))
