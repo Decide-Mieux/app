@@ -76,13 +76,21 @@ def evaluate(decision_id):
 
     if request.method == "POST":
         user_name = request.form["user"]
-        for choice in choices:
-            score = request.form.get(f"score_{choice.id}")
-            if score is not None:
-                db.session.add(Evaluation(user_name=user_name, choice_id=choice.id, score=int(score), decision_id=decision_id))
-        db.session.commit()
-        flash("Your evaluation was saved!", "success")
-        return render_template("thank_you.html")
+        # Check if this user has already voted in this poll
+        existing_vote = Evaluation.query.filter_by(
+            decision_id=decision_id,
+            user_name=user_name
+        ).first()
+        if existing_vote:
+            flash(f"A vote already exists for {user_name}.","danger")
+        else:
+            for choice in choices:
+                score = request.form.get(f"score_{choice.id}")
+                if score is not None:
+                    db.session.add(Evaluation(user_name=user_name, choice_id=choice.id, score=int(score), decision_id=decision_id))
+            db.session.commit()
+            flash("Your evaluation was saved!", "success")
+            return render_template("thank_you.html")
 
     return render_template("evaluate.html", decision=decision, choices=choices, scale=scale)
 
@@ -145,9 +153,7 @@ def creator_logout():
 @app.route("/creator/<creator_id>")
 def creator_dashboard(creator_id):
     decisions = DecisionInstance.query.filter_by(creator_id=creator_id).all()
-
     return render_template("creator_dashboard.html", decisions=decisions)
-
 
 @app.route("/delete/<decision_id>", methods=["POST"])
 def delete_decision(decision_id):
