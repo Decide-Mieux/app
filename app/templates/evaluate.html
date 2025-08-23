@@ -8,6 +8,15 @@
 
 </head>
 <body class="bg-light">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 <div class="container py-5">
     <h2>{{ decision.name }}</h2>
     <p class="text-muted">Please evaluate each choice using the following scale (ordered from lowest to highest):</p>
