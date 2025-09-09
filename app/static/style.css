@@ -81,6 +81,22 @@ button:hover, .btn:hover {
     transform: translateY(-1px);
 }
 */
+.tag {
+  color: white;
+  background-color: #e9ecef;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  margin: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+.tag .remove {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  color: black;
+}
+
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
