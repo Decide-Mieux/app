@@ -5,6 +5,140 @@
     <title>Evaluate</title>
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/litera/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .scale-btn {
+            margin: 0.25rem;
+            min-width: 60px;
+        }
+        .scale-btn.selected {
+            color: white !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<div class="container py-5">
+    <h2>Decide for "{{ decision.name }}"</h2>
+    <!--
+    <p class="text-muted">Please evaluate each choice using the following scale (ordered from lowest to highest):</p>
+    <p><strong>{{ scale|join(' < ') }}</strong></p>
+    -->
+
+    <form method="post" onsubmit="return validateForm()">
+        <div class="mb-3">
+            <input name="user" class="form-control" placeholder="Enter your name" required>
+        </div>
+        <hr>
+
+        {% for choice in choices %}
+            <div class="mb-4">
+                <strong>{{ choice.label }}</strong><br>
+                <small class="text-muted">{{ choice.description }}</small><br>
+
+                <!-- hidden input that stores the selected score -->
+                <input type="hidden" name="score_{{ choice.id }}" id="score_{{ choice.id }}" required>
+
+                <!-- buttons for each scale value -->
+                <div class="btn-group mt-2" role="group">
+                    {% for s in scale %}
+                        {% set idx = loop.index0 %}
+                        <button type="button"
+                                class="btn btn-outline-secondary scale-btn"
+                                onclick="selectScore('{{ choice.id }}', '{{ idx }}', this)">
+                            {{ s.strip() }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <button class="btn btn-success btn-lg">✅ Submit Evaluation</button>
+    </form>
+</div>
+
+<script>
+function validateForm() {
+    let allValid = true;
+    {% for choice in choices %}
+        let val{{ choice.id }} = document.getElementById("score_{{ choice.id }}").value;
+        if (val{{ choice.id }} === "") {
+            allValid = false;
+            alert("Please evaluate all choices before submitting.");
+            return false;  // stop immediately when one is missing
+        }
+    {% endfor %}
+    return allValid;
+}
+
+function generateColors(n) {
+    // Red → Yellow → Green
+    let colors = [];
+    for (let i = 0; i < n; i++) {
+        let ratio = i / (n - 1); // 0 → 1
+        let r, g, b;
+
+        if (ratio < 0.5) {
+            // Red (220,53,69) → Yellow (255,193,7)
+            let t = ratio / 0.5;
+            r = Math.round(220 + (255 - 220) * t);
+            g = Math.round(53 + (193 - 53) * t);
+            b = Math.round(69 + (7 - 69) * t);
+        } else {
+            // Yellow (255,193,7) → Green (25,135,84)
+            let t = (ratio - 0.5) / 0.5;
+            r = Math.round(255 + (25 - 255) * t);
+            g = Math.round(193 + (135 - 193) * t);
+            b = Math.round(7 + (84 - 7) * t);
+        }
+        colors.push(`rgb(${r},${g},${b})`);
+    }
+    return colors;
+}
+
+const SCALE = {{ scale|tojson }};
+const colors = generateColors(SCALE.length); // dynamic length, always correct
+
+function selectScore(choiceId, value, btn) {
+    // update hidden input
+    document.getElementById("score_" + choiceId).value = value;
+
+    // reset all buttons in this group
+    let group = btn.parentNode.querySelectorAll(".scale-btn");
+    group.forEach(b => {
+        b.classList.remove("selected");
+        b.classList.remove("btn-danger", "btn-warning", "btn-success");
+        b.style.backgroundColor = "";
+    });
+
+    // highlight selected button
+    btn.classList.add("selected");
+    // color according to value (map value to colors array)
+    let colorIdx = Math.floor((value / (group.length - 1)) * (colors.length - 1));
+    btn.style.backgroundColor = colors[colorIdx];
+}
+</script>
+
+
+</body>
+</html>
+
+<!--
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Evaluate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/litera/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 <body class="bg-light">
@@ -43,3 +177,5 @@
 </div>
 </body>
 </html>
+
+-->
