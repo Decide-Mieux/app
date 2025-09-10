@@ -26,7 +26,7 @@
   {% endif %}
 {% endwith %}
 <div class="container py-5">
-    <h2>Your decision for "{{ decision.name }}"</h2>
+    <h2>Your evaluations for "{{ decision.name }}"</h2>
     <!--
     <p class="text-muted">Please evaluate each choice using the following scale (ordered from lowest to highest):</p>
     <p><strong>{{ scale|join(' < ') }}</strong></p>
@@ -40,8 +40,10 @@
 
         {% for choice in choices %}
             <div class="mb-4">
-                <strong>{{ choice.label }}</strong><br>
-                <small class="text-muted">{{ choice.description }}</small><br>
+                <strong>{{ choice.label }}</strong>
+                {% if choice.description %}
+                    <small class="text-muted fst-italic">{{ choice.description }}</small>
+                {% endif %}<br>
 
                 <!-- hidden input that stores the selected score -->
                 <input type="hidden" name="score_{{ choice.id }}" id="score_{{ choice.id }}" required>
