@@ -9,7 +9,7 @@
 <body class="bg-light">
 <div class="container py-5">
     <h2>Results: {{ decision.name }}</h2>
-    <p class="text-muted">The choice with the highest <strong>median score</strong> wins (ties are broken according to the mean).</p>
+        <p class="text-muted">The choice with the highest <strong>median score</strong> wins (ties are broken according to the mean).</p>
     {% if stats %}
        <table id="results-table" class="table table-bordered">
 <thead>
@@ -33,6 +33,7 @@
                 {% endfor %}
             </tbody>
         </table>
+    <p class="text-muted">Nom des votants: {{ votants }} </p>
         {% if winner %}
             <div class="alert alert-info">
                 🏆 Winner: <strong>{{ winner.label }}</strong><br>
