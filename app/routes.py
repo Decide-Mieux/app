@@ -90,7 +90,7 @@ def evaluate(decision_id):
                     db.session.add(Evaluation(user_name=user_name, choice_id=choice.id, score=int(score), decision_id=decision_id))
             db.session.commit()
             flash("Your evaluation was saved!", "success")
-            return render_template("thank_you.html")
+            return render_template("thank_you.html",name=user_name)
 
     return render_template("evaluate.html", decision=decision, choices=choices, scale=scale)
 
@@ -100,6 +100,10 @@ def results(decision_id):
     decision = DecisionInstance.query.get_or_404(decision_id)
     choices = Choice.query.filter_by(decision_id=decision_id).all()
     evaluations = Evaluation.query.filter_by(decision_id=decision_id).all()
+
+    votants = [e.user_name for e in evaluations]
+
+
 
     stats = []
     for c in choices:
@@ -113,7 +117,7 @@ def results(decision_id):
                 "count": len(scores)
             })
     winner = max(stats, key=lambda x: (x['median'], x['mean'])) if stats else None
-    return render_template("results.html", decision=decision, stats=stats, winner=winner)
+    return render_template("results.html", decision=decision, stats=stats, winner=winner, votants=votants)
 #
 # @app.route("/list")
 # def list_decisions():
